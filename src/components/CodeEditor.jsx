@@ -3,12 +3,18 @@ import { Box, HStack } from "@chakra-ui/react";
 import { Editor } from "@monaco-editor/react";
 import LanguageSelector from "./LanguageSelector";
 import { CODE_SNIPPETS } from "../constants";
+import { difficultyCode } from "../constants";
 import Output from "./Output";
+import DifficultySelector from "./DifficultySelector";
+
+import { Flex } from "@chakra-ui/react";
 
 const CodeEditor = () => {
   const editorRef = useRef();
   const [value, setValue] = useState("");
-  const [language, setLanguage] = useState("javascript");
+  const [language, setLanguage] = useState("rust");
+
+  const [difficulty, setDifficulty] = useState("easy");
 
   const onMount = (editor) => {
     editorRef.current = editor;
@@ -20,11 +26,20 @@ const CodeEditor = () => {
     setValue(CODE_SNIPPETS[language]);
   };
 
+  const onSelectDifficulty = (difficulty) => {
+    setDifficulty(difficulty)
+    setValue(difficultyCode[difficulty])
+  }
+
   return (
     <Box>
       <HStack spacing={4}>
         <Box w="50%">
-          <LanguageSelector language={language} onSelect={onSelect} />
+          <Flex minWidth="max-content" alignItems="center" gap="5">
+            <LanguageSelector language={language} onSelect={onSelect} />
+            <DifficultySelector difficulty={difficulty} onSelect={onSelectDifficulty} />
+          </Flex>
+
           <Editor
             options={{
               minimap: {
